@@ -334,6 +334,8 @@ function create_config {
     "  - creating $demo_home/config-vault_1.hcl"
 
   rm -f config-vault_1.hcl
+  rm -rf "$demo_home"/raft-vault_1
+  mkdir -pm 0755 "$demo_home"/raft-vault_1
 
   tee "$demo_home"/config-vault_1.hcl 1> /dev/null <<EOF
 storage "raft" {
