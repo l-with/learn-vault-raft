@@ -349,6 +349,7 @@ storage "raft" {
 
 listener "tcp" {
    address = "127.0.0.1:8200"
+   cluster_address = "127.0.0.1:8201"
    tls_disable = true
 }
 
