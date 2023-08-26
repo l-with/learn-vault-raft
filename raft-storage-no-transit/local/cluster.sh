@@ -94,10 +94,6 @@ function start_vault {
   if [[ "$vault_node_name" != "vault_1" ]] ; then
     if [[ -e "$demo_home/unseal_key-vault_1" ]] ; then
       VAULT_UNSEAL_KEY=$(cat "$demo_home"/unseal_key-vault_1)
-
-      printf "\n%s" \
-        "Using [vault_1] unseal key ($VAULT_UNSEAL_KEY) to unseal"
-      printf "\n"
     fi
   fi
 
@@ -105,6 +101,9 @@ function start_vault {
 
   # unseal with unseal kes from vault_1
   if [[ "$vault_node_name" != "vault_1" ]] ; then
+    printf "\n%s" \
+      "Using [vault_1] unseal key ($VAULT_UNSEAL_KEY) to unseal"
+    printf "\n"
     ./cluster.sh $vault_node_name operator unseal $VAULT_UNSEAL_KEY
   fi
 }
