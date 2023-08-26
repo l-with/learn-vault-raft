@@ -465,6 +465,41 @@ function setup_vault_3 {
   vault_3 operator unseal "$UNSEAL_KEY"
 }
 
+function unseal_vault {
+  local vault_node_name=$1
+
+  printf "\n%s" \
+    "$vault_node_name unsealing with unseal key from vault_1" \
+    ""
+  sleep 2 # Added for human readability
+
+  UNSEAL_KEY=$(cat "$demo_home"/unseal_key-vault_1)
+  vault_node_name operator unseal "$UNSEAL_KEY"
+}
+
+function unseal {
+  case "$1" in
+    vault_1)
+      unseal_vault "vault_1"
+      ;;
+    vault_2)
+      unseal_vault "vault_2"
+      ;;
+    vault_3)
+      unseal_vault "vault_3"
+      ;;
+    all)
+      for vault_node_name in vault_1 vault_2 vault_3 ; do
+        unseal_vault $vault_node_name
+      done
+      ;;
+    *)
+      printf "\n%s" \
+        "Usage: $script_name unseal [all|vault_1|vault_2|vault_3]" \
+        ""
+      ;;
+    esac
+}
 
 function create {
   case "$1" in
@@ -519,6 +554,10 @@ case "$1" in
     shift ;
     setup "$@"
     ;;
+  unseal)
+    shift ;
+    unseal "$@"
+    ;;
   vault_1)
     shift ;
     vault_1 "$@"
@@ -551,7 +590,7 @@ case "$1" in
       "This script helps manages a Vault HA cluster with raft storage." \
       "View the README.md the complete guide at https://learn.hashicorp.com/vault/beta/raft-storage" \
       "" \
-      "Usage: $script_name [create|setup|status|stop|clean|vault_1|vault_2|vault_3]" \
+      "Usage: $script_name [create|setup|unseal|status|stop|clean|vault_1|vault_2|vault_3]" \
       ""
     ;;
 esac
