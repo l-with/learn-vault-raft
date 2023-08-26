@@ -534,7 +534,7 @@ case "$1" in
       "This script helps manages a Vault HA cluster with raft storage." \
       "View the README.md the complete guide at https://learn.hashicorp.com/vault/beta/raft-storage" \
       "" \
-      "Usage: $script_name [create|setup|status|stop|clean|vault_1|vault_2|vault_3|vault_4]" \
+      "Usage: $script_name [create|setup|status|stop|clean|vault_1|vault_2|vault_3]" \
       ""
     ;;
 esac
