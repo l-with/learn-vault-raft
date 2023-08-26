@@ -510,10 +510,6 @@ case "$1" in
     shift ;
     vault_3 "$@"
     ;;
-  vault_4)
-    shift ;
-    vault_4 "$@"
-    ;;
   status)
     status
     ;;
