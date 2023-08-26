@@ -102,6 +102,11 @@ function start_vault {
   fi
 
   vault server -log-level=trace -config "$vault_config_file" > "$vault_log_file" 2>&1 &
+
+  # unseal with unseal kes from vault_1
+  if [[ "$vault_node_name" != "vault_1" ]] ; then
+    ./cluster.sh $vault_node_name operator unseal $VAULT_UNSEAL_KEY
+  fi
 }
 
 function start {
