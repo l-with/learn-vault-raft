@@ -434,6 +434,14 @@ function setup_vault_2 {
 function setup_vault_3 {
   start_vault "vault_3"
   sleep 2
+
+  printf "\n%s" \
+    "[vault_3] unsealing with unseal key from vault_1" \
+    ""
+  sleep 2 # Added for human readability
+
+  UNSEAL_KEY=$(cat "$demo_home"/unseal_key-vault_1)
+  vault_3 operator unseal "$UNSEAL_KEY"
 }
 
 
