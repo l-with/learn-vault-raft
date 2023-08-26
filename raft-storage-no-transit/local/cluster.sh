@@ -118,20 +118,21 @@ function start_vault {
     "[$vault_node_name] starting Vault server @ $vault_network_address" \
     ""
 
-  # vault_1 when started should not be looking for a token. It should be
-  # creating the token.
+  # vault_1 when started should not be looking for a unseal key. It should be
+  # creating the unseal key.
 
   if [[ "$vault_node_name" != "vault_1" ]] ; then
-    if [[ -e "$demo_home/root_token-vault_1" ]] ; then
-      VAULT_TOKEN=$(cat "$demo_home"/root_token-vault_1)
+    if [[ -e "$demo_home/unseal_key-vault_1" ]] ; then
+      VAULT_UNSEAL_KEY=$(cat "$demo_home"/unseal_key-vault_1)
 
       printf "\n%s" \
-        "Using [vault_1] root token ($VAULT_TOKEN) to retrieve transit key for auto-unseal"
+        "Using [vault_1] unseal key ($VAULT_UNSEAL_KEY) to unseal"
       printf "\n"
     fi
   fi
 
-  VAULT_TOKEN=$VAULT_TOKEN VAULT_API_ADDR=$vault_network_address vault server -log-level=trace -config "$vault_config_file" > "$vault_log_file" 2>&1 &
+  VAULT_API_ADDR=$vault_network_address vault server -log-level=trace -config "$vault_config_file" > "$vault_log_file" 2>&1 &
+  VAULT_ADDR=$vault_network_address
 }
 
 function start {
@@ -328,7 +329,6 @@ function create_network {
 }
 
 function create_config {
-
   printf "\n%s" \
     "[vault_1] Creating configuration" \
     "  - creating $demo_home/config-vault_1.hcl"
@@ -355,6 +355,7 @@ listener "tcp" {
    tls_disable = true
 }
 
+api_addr = "http://127.0.0.1:8200"
 cluster_addr = "http://127.0.0.1:8201"
 ui = true
 disable_mlock = true
@@ -389,6 +390,7 @@ listener "tcp" {
 
 ui = true
 disable_mlock = true
+api_addr = "http://127.0.0.2:8200"
 cluster_addr = "http://127.0.0.2:8201"
 EOF
 
@@ -421,6 +423,7 @@ listener "tcp" {
 
 ui = true
 disable_mlock = true
+api_addr = "http://127.0.0.3:8200"
 cluster_addr = "http://127.0.0.3:8201"
 EOF
 
