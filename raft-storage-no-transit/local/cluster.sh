@@ -66,17 +66,14 @@ function stop {
     vault_3)
       stop_vault "vault_3"
       ;;
-    vault_4)
-      stop_vault "vault_4"
-      ;;
     all)
-      for vault_node_name in vault_1 vault_2 vault_3 vault_4 ; do
+      for vault_node_name in vault_1 vault_2 vault_3 ; do
         stop_vault $vault_node_name
       done
       ;;
     *)
       printf "\n%s" \
-        "Usage: $script_name stop [all|vault_1|vault_2|vault_3|vault_4]" \
+        "Usage: $script_name stop [all|vault_1|vault_2|vault_3]" \
         ""
       ;;
     esac
