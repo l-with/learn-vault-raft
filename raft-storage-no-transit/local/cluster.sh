@@ -474,7 +474,7 @@ function unseal_vault {
   sleep 2 # Added for human readability
 
   UNSEAL_KEY=$(cat "$demo_home"/unseal_key-vault_1)
-  vault_node_name operator unseal "$UNSEAL_KEY"
+  $vault_node_name operator unseal "$UNSEAL_KEY"
 }
 
 function unseal {
