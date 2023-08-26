@@ -89,23 +89,7 @@ function start_vault {
     "[$vault_node_name] starting Vault server @ $vault_network_address" \
     ""
 
-  # vault_1 when started should not be looking for a unseal key. It should be
-  # creating the unseal key.
-  if [[ "$vault_node_name" != "vault_1" ]] ; then
-    if [[ -e "$demo_home/unseal_key-vault_1" ]] ; then
-      VAULT_UNSEAL_KEY=$(cat "$demo_home"/unseal_key-vault_1)
-    fi
-  fi
-
   vault server -log-level=trace -config "$vault_config_file" > "$vault_log_file" 2>&1 &
-
-  # unseal with unseal kes from vault_1
-  if [[ "$vault_node_name" != "vault_1" ]] ; then
-    printf "\n%s" \
-      "Using [vault_1] unseal key ($VAULT_UNSEAL_KEY) to unseal"
-    printf "\n"
-    ./cluster.sh $vault_node_name operator unseal $VAULT_UNSEAL_KEY
-  fi
 }
 
 function start {
@@ -437,6 +421,14 @@ function setup_vault_1 {
 function setup_vault_2 {
   start_vault "vault_2"
   sleep 5
+
+  printf "\n%s" \
+    "[vault_2] unsealing with unseal key from vault_1" \
+    ""
+  sleep 2 # Added for human readability
+
+  UNSEAL_KEY=$(cat "$demo_home"/unseal_key-vault_1)
+  vault_2 operator unseal "$UNSEAL_KEY"
 }
 
 function setup_vault_3 {
