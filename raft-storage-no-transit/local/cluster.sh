@@ -82,8 +82,6 @@ function stop {
 function start_vault {
   local vault_node_name=$1
 
-  local vault_network_address
-  vault_network_address=$(vault_to_network_address "$vault_node_name")
   local vault_config_file=$demo_home/config-$vault_node_name.hcl
   local vault_log_file=$demo_home/$vault_node_name.log
 
@@ -104,7 +102,8 @@ function start_vault {
   fi
 
   vault server -log-level=trace -config "$vault_config_file" > "$vault_log_file" 2>&1 &
-  VAULT_ADDR=$vault_network_address
+  echo #!/bin/sh > $vault_node_name vault_1.sh
+  echo vault_1 >>vault_1.sh
 }
 
 function start {
