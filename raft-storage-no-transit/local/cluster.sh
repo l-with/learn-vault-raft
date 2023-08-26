@@ -57,11 +57,6 @@ function vault_3 {
     (export VAULT_ADDR=http://127.0.0.3:8200 && vault "$@")
 }
 
-# Create a helper function to address the fourth vault node
-function vault_4 {
-    (export VAULT_ADDR=http://127.0.0.4:8200 && vault "$@")
-}
-
 function stop_vault {
   local vault_node_name=$1
 
@@ -120,7 +115,6 @@ function start_vault {
 
   # vault_1 when started should not be looking for a unseal key. It should be
   # creating the unseal key.
-
   if [[ "$vault_node_name" != "vault_1" ]] ; then
     if [[ -e "$demo_home/unseal_key-vault_1" ]] ; then
       VAULT_UNSEAL_KEY=$(cat "$demo_home"/unseal_key-vault_1)
@@ -131,7 +125,7 @@ function start_vault {
     fi
   fi
 
-  VAULT_API_ADDR=$vault_network_address vault server -log-level=trace -config "$vault_config_file" > "$vault_log_file" 2>&1 &
+  vault server -log-level=trace -config "$vault_config_file" > "$vault_log_file" 2>&1 &
   VAULT_ADDR=$vault_network_address
 }
 
