@@ -102,8 +102,6 @@ function start_vault {
   fi
 
   vault server -log-level=trace -config "$vault_config_file" > "$vault_log_file" 2>&1 &
-  echo #!/bin/sh > $vault_node_name vault_1.sh
-  echo vault_1 >>vault_1.sh
 }
 
 function start {
