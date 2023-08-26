@@ -23,25 +23,6 @@ if [ "$os_name" != "darwin" ] && [ "$os_name" != "linux" ]; then
   exit 1
 fi
 
-function vault_to_network_address {
-  local vault_node_name=$1
-
-  case "$vault_node_name" in
-    vault_1)
-      echo "http://127.0.0.1:8200"
-      ;;
-    vault_2)
-      echo "http://127.0.0.2:8200"
-      ;;
-    vault_3)
-      echo "http://127.0.0.3:8200"
-      ;;
-    vault_4)
-      echo "http://127.0.0.4:8200"
-      ;;
-  esac
-}
-
 # Create a helper function to address the first vault node
 function vault_1 {
     (export VAULT_ADDR=http://127.0.0.1:8200 && vault "$@")
