@@ -36,9 +36,6 @@ function vault_to_network_address {
     vault_3)
       echo "http://127.0.0.3:8200"
       ;;
-    vault_4)
-      echo "http://127.0.0.4:8200"
-      ;;
   esac
 }
 
