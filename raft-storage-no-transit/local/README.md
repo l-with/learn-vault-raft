@@ -49,7 +49,7 @@ all nodes with `./cluster.sh setup all`.
 
     ```shell
     $ ./cluster.sh setup vault_1
-    [vault_1] starting
+    [vault_1] starting Vault server @ http://127.0.0.1:8200
 
     [vault_1] initializing and capturing the unseal key and root token
 
@@ -78,68 +78,41 @@ all nodes with `./cluster.sh setup all`.
 
     ```shell
     $ ./cluster.sh setup vault_2
-    Using [vault_1] root token (s.E9luqJNmTz4AwFF4orqu0UTt) to retrieve transit key for auto-unseal
-
     [vault_2] starting Vault server @ http://127.0.0.2:8200
-
-    [vault_2] initializing and capturing the recovery key and root token
-
-    [vault_2] Recovery key: zD79QAvrbLP9ndgNRPdTfubEvJByVqdQMGjuWM0p6Gs=
-    [vault_2] Root token: s.tLDy8gNJQZjQuYozVy2YG0zw
-
-    [vault_2] waiting to join Vault cluster (15 seconds)
-    ```
+   
+    [vault_2] unsealing with unseal key from vault_1
+   
+    ...
+ ```
 
 1. Setup **vault_3**:
 
     ```shell
     $ ./cluster.sh setup vault_3
+    [vault_3] starting Vault server @ http://127.0.0.3:8200
+   
+    [vault_3] unsealing with unseal key from vault_1
+    
     ...
     ```
 
-1. Setup **vault_4**:
+
+## View the cluster configuration from any cluster member:
 
     ```shell
-    $ ./cluster.sh setup vault_4
-    ...
-    ```
-
-## Join nodes to the cluster
-
-1. Join **vault_3** to the cluster:
-
-    ```shell
-    $ ./cluster.sh vault_3 operator raft join http://127.0.0.2:8200
-    Key       Value
-    ---       -----
-    Joined    true
-    ```
-
-1.  Join **vault_4** to the cluster:
-
-    ```shell
-    $ ./cluster.sh vault_4 operator raft join http://127.0.0.2:8200
-    Key       Value
-    ---       -----
-    Joined    true
-    ```
-
-1.  View the cluster configuration from any cluster member:
-
-    ```shell
+    $ ./cluster.sh vault_1 operator raft list-peers
     $ ./cluster.sh vault_2 operator raft list-peers
     $ ./cluster.sh vault_3 operator raft list-peers
-    $ ./cluster.sh vault_4 operator raft list-peers
    ```
 
-    The output should show that `vault_3` and `vault_4` are cluster members as follower.
+    The output should show that `vault_2` and `vault_3` are cluster members as follower.
 
     ```
     Node       Address           State       Voter
     ----       -------           -----       -----
-    vault_2    127.0.0.2:8201    leader      true
+    vault_1    127.0.0.1:8201    leader      true
+    vault_2    127.0.0.2:8201    follower    true
     vault_3    127.0.0.3:8201    follower    true
-    vault_4    127.0.0.4:8201    follower    true
     ```
 
 # Interacting with the nodes
@@ -153,13 +126,19 @@ $ ./cluster.sh status
 Stop an individual node or all nodes:
 
 ```sh
-$ ./cluster.sh stop [vault_1|vault_2|vault_3|vault_4|all]
+$ ./cluster.sh stop [vault_1|vault_2|vault_3|all]
 ```
 
 Start an individual node or all nodes:
 
 ```sh
-$ ./cluster.sh start [vault_1|vault_2|vault_3|vault_4|all]
+$ ./cluster.sh start [vault_1|vault_2|vault_3|all]
+```
+
+Unseal an individual node or all nodes:
+
+```sh
+$ ./cluster.sh unseal [vault_1|vault_2|vault_3|all]
 ```
 
 Issue a Vault command, like `status`, targeting one of the nodes:
@@ -168,7 +147,6 @@ Issue a Vault command, like `status`, targeting one of the nodes:
 $ ./cluster.sh vault_1 status
 $ ./cluster.sh vault_2 status
 $ ./cluster.sh vault_3 status
-$ ./cluster.sh vault_4 status
 ```
 
 # Clean up
